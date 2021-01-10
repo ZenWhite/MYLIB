@@ -1,35 +1,18 @@
-import * as types from './types';
-import BookService from '../service';
+import * as types from './types'
+import { bookService } from '../service'
 
 export const fetchBooks = (value) => {
-    return async dispatch => {
-        dispatch({type: types.FETCH_BOOKS_SUCCESS, payload: []});
-        dispatch({type: types.FETCH_BOOKS_LOADING});
+  return async (dispatch) => {
+    dispatch({ type: types.FETCH_BOOKS_SUCCESS, payload: [] })
+    dispatch({ type: types.FETCH_BOOKS_LOADING })
 
-        try {
-            BookService.getList(value).then(
-                bookList => {
-                    dispatch({
-                        type: types.FETCH_BOOKS_SUCCESS,
-                        payload: bookList.items
-                    })
-                }
-            )
-        } catch(err) {
-            dispatch({type: types.FETCH_BOOKS_FAILED});
-        }
-
-    }
+    bookService
+      .getList(value)
+      .then((books) => dispatch({ type: types.FETCH_BOOKS_SUCCESS, payload: books.items }))
+      .catch((error) => dispatch({ type: types.FETCH_BOOKS_FAILED }))
+  }
 }
 
-export const addToLibrary = (book) => {
-    return dispatch => {
-        dispatch({type: types.ADD_TO_LIBRARY, payload: book})
-    }
-}
+export const addToLibrary = (book) => (dispatch) => dispatch({ type: types.ADD_TO_LIBRARY, payload: book })
 
-export const removeFromLibrary = (id) => {
-    return dispatch => {
-        dispatch({type: types.REMOVE_FROM_LIBRARY, payload: id});
-    }
-}
+export const removeFromLibrary = (id) => (dispatch) => dispatch({ type: types.REMOVE_FROM_LIBRARY, payload: id })
